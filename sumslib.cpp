@@ -1,21 +1,36 @@
-// BRIAN SUMNER
-// xxxxx6936
-// <SUMNER_STANDARD_LIBRARY>
-// FILE: 6936HW_sslib.cpp
+//############################################################################
+// BRIAN SUMNER                                                              #
+// UCDENVER DEPARTMENT OF COMPUTER SCIENCE                                   #
+// <SUMNER_STANDARD_LIBRARY>                                                 #
+// FILE: sumslib.cpp                                                         #
+//############################################################################
 
 
 
-
-#include "6936HW_sslib.h"
+#include "sumslib.h"
 #include <iostream>
 #include <string>
 #include <cstdlib>
 
 
 
-namespace sslib_rev01
+namespace sumslib_rev02
 
 {
+
+
+	void msg(std::string arg_string_message, int arg_lines_above, int arg_lines_below)
+	{
+		std::cout << lf(arg_lines_above) << arg_string_message << lf(arg_lines_below);
+	}
+
+
+
+	void error(std::string arg_string_message, int arg_lines_above, int arg_lines_below)
+	{
+		msg(ctr("[ERROR: " + arg_string_message + "]"), arg_lines_above, arg_lines_below);
+	}
+
 
 
 	std::string ctr(int arg_left_align, std::string arg_string, int arg_lines_above, int arg_lines_below)
@@ -30,7 +45,7 @@ namespace sslib_rev01
 		std::string margin = "";
 		std::string output = "";
 
-		output += cr(arg_lines_above);
+		output += lf(arg_lines_above);
 
 		if (arg_string.length() <= 78)
 			for (int index = 0;
@@ -41,14 +56,14 @@ namespace sslib_rev01
 		output += margin;
 		output += arg_string;
 
-		output += cr(arg_lines_below);
+		output += lf(arg_lines_below);
 
 		return output;
 	}
 
 
 
-	std::string cr(int arg_lines)
+	std::string lf(int arg_lines)
 	{
 		std::string output = "";
 
@@ -84,12 +99,12 @@ namespace sslib_rev01
 		{
 			buffer = promptString(arg_string);
 
-			if ((buffer == "Y") || (acceptLowerCase && buffer == "y"))
+			if ((buffer == "Y") || (acceptLowerCase && (buffer == "y")))
 			{
 				valid = true;
 				output = true;
 			}
-			else if ((buffer == "N") || (acceptLowerCase && buffer == "n"))
+			else if ((buffer == "N") || (acceptLowerCase && (buffer == "n")))
 			{
 				valid = true;
 				output = false;
@@ -99,6 +114,23 @@ namespace sslib_rev01
 
 		return output;
 	}
+
+
+
+	bool promptY(std::string arg_string, bool acceptLowerCase)
+	{
+		std::string buffer;
+		bool output = false;
+
+		buffer = promptString(arg_string);
+
+		if ((buffer == "Y") || (acceptLowerCase && (buffer == "y")))
+			output = true;
+
+		return output;
+	}
+
+
 
 
 
@@ -113,12 +145,17 @@ namespace sslib_rev01
 		{
 			buffer = promptString(arg_string);
 
-			// SET VALID IF OUTPUT IS INTEGER
+
+			// YES THIS IS A HACK
+			if (buffer == "0") return 0;
+
+
+			// SET VALID IF OUTPUT AS INTEGER ASSIGNMENT SUCCESSFUL
 			valid = (output = std::atoi(buffer.c_str()));
 
 			// CHECK RANGE
 			if (valid && useRange)
-				valid = (arg_lower <= output && output <= arg_upper);
+				valid = ((arg_lower <= output) && (output <= arg_upper));
 
 		} while (!valid);
 
@@ -139,7 +176,7 @@ namespace sslib_rev01
 		{
 			buffer = promptString(arg_string);
 
-			// SET VALID IF OUTPUT IS FLOAT
+			// SET VALID IF OUTPUT AS FLOAT ASSIGNMENT SUCCESSFUL
 			valid = (output = std::atof(buffer.c_str()));
 
 			// CHECK RANGE
@@ -187,6 +224,29 @@ namespace sslib_rev01
 
 		return buffer;
 	}
+
+
+
+	void pause(std::string arg_string, int arg_lines_above, int arg_lines_below)
+	{
+		promptString(lf(arg_lines_above) + arg_string + lf(arg_lines_below));
+	}
+
+
+
+	void pause(int arg_lines_above, int arg_lines_below)
+	{
+		pause(ctr("[PRESS ENTER TO CONTINUE]"), arg_lines_above, arg_lines_below);
+	}
+
+
+
+
+
+
+
+
+
 
 
 
